@@ -139,7 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ChildClasses.cpp" />
     <ClCompile Include="Task6.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AbstractClasses.h" />
+    <ClInclude Include="ChildClasses.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
