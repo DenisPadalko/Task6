@@ -90,6 +90,66 @@ Ellipse::Ellipse(const Ellipse& AnotherEllipse)
 Ellipse::~Ellipse() 
 {}
 
+Vector::Vector() : X(0), Y(0), Z(0)
+{}
+
+Vector::Vector(const double NewX, const double NewY, const double NewZ) : X(NewX), Y(NewY), Z(NewZ)
+{}
+
+Vector::Vector(const Vector& AnotherVector) 
+{
+	X = AnotherVector.X;
+	Y = AnotherVector.Y;
+	Z = AnotherVector.Z;
+}
+
+Vector::Vector(Vector&& AnotherVector) 
+{
+	X = AnotherVector.X;
+	Y = AnotherVector.Y;
+	Z = AnotherVector.Z;
+	AnotherVector.X = NULL;
+	AnotherVector.Y = NULL;
+	AnotherVector.Z = NULL;
+}
+
+double Vector::GetVectorCoordinateX() const 
+{
+	return X;
+}
+
+void Vector::SetVectorCoordinateX(const double NewX) 
+{
+	X = NewX;
+}
+
+double Vector::GetVectorCoordinateY() const 
+{
+	return Y;
+}
+
+void Vector::SetVectorCoordinateY(const double NewY)
+{
+	Y = NewY;
+}
+
+double Vector::GetVectorCoordinateZ() const 
+{
+	return Z;
+}
+
+void Vector::SetVectorCoordinateZ(const double NewZ) 
+{
+	Z = NewZ;
+}
+
+void Vector::SetAllCoordinates(const double NewX, const double NewY, const double NewZ) 
+{
+	X = NewX;
+	Y = NewY;
+	Z = NewZ;
+}
+
 Box::Box() 
 {}
 

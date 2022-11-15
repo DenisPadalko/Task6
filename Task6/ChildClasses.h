@@ -25,8 +25,32 @@ public:
 	~Ellipse();
 };
 
+class Vector
+{
+private:
+	double X;
+	double Y;
+	double Z;
+public:
+	Vector();
+	Vector(const double X, const double Y, const double Z);
+	Vector(const Vector& AnotherVector);
+	Vector(Vector&& AnotherVector);
+
+	double GetVectorCoordinateX() const;
+	void SetVectorCoordinateX(const double NewX);
+	double GetVectorCoordinateY() const;
+	void SetVectorCoordinateY(const double NewY);
+	double GetVectorCoordinateZ() const;
+	void SetVectorCoordinateZ(const double NewZ);
+	void SetAllCoordinates(const double NewX, const double NewY, const double NewZ);
+};
+
 class Box : public Body3D 
 {
+private:
+	Vector** Min = nullptr;
+	Vector** Max = nullptr;
 public:
 	Box();
 	Box(const double NewX, const double NewY, const double NewZ);
