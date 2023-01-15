@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractClasses.cpp" />
     <ClCompile Include="ChildClasses.cpp" />
     <ClCompile Include="Task6.cpp" />
   </ItemGroup>

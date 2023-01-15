@@ -1,10 +1,10 @@
 #pragma once
 #include "AbstractClasses.h"
 
+using namespace std;
 class Paralelogram : public Body2D
 {
 private:
-	double** CoordinatesOfVertices;
 public:
 	Paralelogram();
 	Paralelogram(const double** Vertices, const double X, const double Y);
@@ -13,7 +13,6 @@ public:
 
 	const double CalculatePerimeter();
 	const double CalculateArea();
-	const double CalculateLengthOfTheSide(const double X1, const double Y1, const double X2, const double Y2);
 };
 
 class Ellipse : public Body2D 
@@ -37,6 +36,13 @@ public:
 	Vector(const Vector& AnotherVector);
 	Vector(Vector&& AnotherVector);
 
+	const Vector& operator=(const Vector& AnotherVector);
+	const Vector& operator=(Vector&& AnotherVector);
+	friend const Vector operator+(Vector Left, const Vector& Right);
+	friend const Vector operator-(Vector Left, const Vector& Right);
+	const Vector& operator+=(const Vector& AnotherVector);
+	const Vector& operator-=(const Vector& AnotherVector);
+
 	double GetVectorCoordinateX() const;
 	void SetVectorCoordinateX(const double NewX);
 	double GetVectorCoordinateY() const;
@@ -49,12 +55,13 @@ public:
 class Box : public Body3D 
 {
 private:
-	Vector** Min = nullptr;
-	Vector** Max = nullptr;
+	Vector Min;
+	Vector Max;
 public:
 	Box();
-	Box(const double NewX, const double NewY, const double NewZ);
+	Box(const double NewX, const double NewY, const double NewZ, const Vector& NewMin, const Vector& NewMax);
 	Box(const Box& AnotherBox);
+	Box(Box&& AnotherBox);
 	~Box();
 
 	const double CalculateVolume();
@@ -69,6 +76,7 @@ public:
 	Ball();
 	Ball(const double NewRadius, const double X, const double Y, const double Z);
 	Ball(const Ball& AnotherBall);
+	Ball(Ball&& AnotherBall);
 	~Ball();
 
 	const double CalculateVolume();
