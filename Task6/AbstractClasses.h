@@ -1,5 +1,6 @@
 #pragma once
 
+using namespace std;
 class Body2D 
 {
 private:
@@ -22,7 +23,7 @@ public:
 class Body3D : public Body2D 
 {
 private:
-	double Z;
+	double Z; // Z coordinate of the center
 public:
 	Body3D();
 	Body3D(const double NewX, const double NewY, const double NewZ);
