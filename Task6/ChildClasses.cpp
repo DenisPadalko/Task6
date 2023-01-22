@@ -2,93 +2,16 @@
 #include <math.h>
 #include <iostream>
 
-Point2D::Point2D() : X(0), Y(0)
-{}
-
-Point2D::Point2D(const double NewX, const double NewY) : X(NewX), Y(NewY)
-{}
-
-Point2D::Point2D(const Point2D& AnotherPoint) : X(AnotherPoint.X), Y(AnotherPoint.Y)
-{}
-
-Point2D::Point2D(Point2D&& AnotherPoint) : X(AnotherPoint.X), Y(AnotherPoint.Y)
-{
-	AnotherPoint.X = 0;
-	AnotherPoint.Y = 0;
-}
-
-const Point2D Point2D::operator=(const Point2D& AnotherPoint) 
-{
-	X = AnotherPoint.X;
-	Y = AnotherPoint.Y;
-}
-
-const Point2D Point2D::operator=(Point2D&& AnotherPoint) 
-{
-	X = AnotherPoint.X;
-	Y = AnotherPoint.Y;
-	AnotherPoint.X = 0;
-	AnotherPoint.Y = 0;
-}
-
-const Point2D operator+(Point2D Left, const Point2D& Right) 
-{
-	return Left += Right;
-}
-
-const Point2D operator-(Point2D Left, const Point2D& Right) 
-{
-	return Left -= Right;
-}
-
-const Point2D& Point2D::operator+=(const Point2D& AnotherPoint) 
-{
-	X += AnotherPoint.X;
-	Y += AnotherPoint.Y;
-	return *this;
-}
-
-const Point2D& Point2D::operator-=(const Point2D& AnotherPoint) 
-{
-	X -= AnotherPoint.X;
-	Y -= AnotherPoint.Y;
-	return *this;
-}
-
-const double Point2D::GetPointCoordinateX() 
-{
-	return X;
-}
-
-void Point2D::SetPointCoordinateX(const double NewX)
-{
-	X = NewX;
-}
-
-const double Point2D::GetPointCoordinateY() 
-{
-	return Y;
-}
-
-void Point2D::SetPointCoordinateY(const double NewY) 
-{
-	Y = NewY;
-}
-
 Paralelogram::Paralelogram() 
 {
-	SetX(1);
-	SetY(1);
-	A = new Point2D(-2, 1);
-	B = new Point2D(0, 4);
+	SetX(0);
+	SetY(0);
 }
 
-Paralelogram::Paralelogram(const double X, const double Y, const double XOfPointA, const double YOfPointA, const double XOfPointB, const double YOfPointB) 
+Paralelogram::Paralelogram(const double X, const double Y, const Point& PointA, const Point& PointB) : A(PointA), B(PointB)
 {
 	SetX(X);
 	SetY(Y);
-	A = new Point2D(XOfPointA, YOfPointA);
-	B = new Point2D(XOfPointB, YOfPointB);
 }
 
 Paralelogram::Paralelogram(const Paralelogram& AnotherParalelogram) : A(AnotherParalelogram.A), B(AnotherParalelogram.B)
@@ -111,30 +34,54 @@ Paralelogram::~Paralelogram()
 {
 }
 
-const double Paralelogram::FindFirstSide() 
+const double Paralelogram::FindFirstSide() const
 {
-	return sqrt(pow(A->GetPointCoordinateX() - B->GetPointCoordinateX(), 2) + pow(A->GetPointCoordinateY() - B->GetPointCoordinateY(), 2));
+	return sqrt(pow(A.GetPointCoordinateX() - B.GetPointCoordinateX(), 2) + pow(A.GetPointCoordinateY() - B.GetPointCoordinateY(), 2));
 }
 
-const double Paralelogram::FindSecondSide() 
+const double Paralelogram::FindSecondSide() const
 {
-	double X = 2 * this->GetX() - A->GetPointCoordinateX();
-	double Y = 2 * this->GetY() - A->GetPointCoordinateY();
-	return sqrt(pow(X - B->GetPointCoordinateX(), 2) + pow(Y - B->GetPointCoordinateY(), 2));
+	double X = 2 * this->GetX() - A.GetPointCoordinateX();
+	double Y = 2 * this->GetY() - A.GetPointCoordinateY();
+	return sqrt(pow(X - B.GetPointCoordinateX(), 2) + pow(Y - B.GetPointCoordinateY(), 2));
 }
 
-const double Paralelogram::CalculatePerimeter() 
+const double Paralelogram::CalculatePerimeter() const
 {
 	return (FindFirstSide() + FindSecondSide()) * 2;
 }
 
-const double Paralelogram::CalculateArea() 
+const double Paralelogram::CalculateArea() const
 {
-	double Diagonal = sqrt(pow(this->GetX() - A->GetPointCoordinateX(), 2) + pow(this->GetY() - A->GetPointCoordinateY(), 2));
+	double Diagonal = sqrt(pow(this->GetX() - A.GetPointCoordinateX(), 2) + pow(this->GetY() - A.GetPointCoordinateY(), 2));
 	double SideA = FindFirstSide();
 	double SideB = FindSecondSide();
 	double Cos = (pow(SideA, 2) + pow(SideB, 2) - pow(Diagonal, 2)) / (2 * SideA * SideB);
 	return SideA * SideB * sqrt(1 - pow(Cos, 2));
+}
+
+const Point& Paralelogram::GetCenter() const
+{
+	Point* P = new Point(this->GetX(), this->GetY(), 0);
+	return *P;
+}
+
+const vector<Point*> Paralelogram::GetVertices() const
+{
+	vector<Point*> vec;
+	Point* a = new Point(A.GetPointCoordinateX(), A.GetPointCoordinateY(), 0);
+	vec.push_back(a);
+	Point* b = new Point(B.GetPointCoordinateX(), B.GetPointCoordinateY(), 0);
+	vec.push_back(b);
+	double X3 = 2 * this->GetX() - A.GetPointCoordinateX();
+	double Y3 = 2 * this->GetY() - A.GetPointCoordinateY();
+	double X4 = 2 * this->GetX() - B.GetPointCoordinateX();
+	double Y4 = 2 * this->GetX() - B.GetPointCoordinateY();
+	Point* c = new Point(X3, Y3, 0);
+	vec.push_back(c);
+	Point* d = new Point(X4, Y4, 0);
+	vec.push_back(d);
+	return vec;
 }
 
 Ellipse::Ellipse() : FirstRadius(6), SecondRadius(4)
@@ -166,121 +113,40 @@ Ellipse::Ellipse(Ellipse&& AnotherEllipse) : FirstRadius(AnotherEllipse.FirstRad
 Ellipse::~Ellipse() 
 {}
 
-const double Ellipse::CalculatePerimeter() 
+const double Ellipse::CalculatePerimeter() const
 {
 	cout << "Perimeter cannot be calculated for ellipse" << endl;
 	return 0;
 }
 
-const double Ellipse::CalculateArea() 
+const double Ellipse::CalculateArea() const
 {
 	return 3.14 * FirstRadius * SecondRadius;
 }
 
-Point::Point() : X(0), Y(0), Z(0)
-{}
-
-Point::Point(const double NewX, const double NewY, const double NewZ) : X(NewX), Y(NewY), Z(NewZ)
-{}
-
-Point::Point(const Point& AnotherPoint) : X(AnotherPoint.X), Y(AnotherPoint.Y), Z (AnotherPoint.Z)
-{}
-
-Point::Point(Point&& AnotherPoint) : X(AnotherPoint.X), Y(AnotherPoint.Y), Z(AnotherPoint.Z)
+const double Ellipse::GetFirstRadius() const 
 {
-	AnotherPoint.X = 0;
-	AnotherPoint.Y = 0;
-	AnotherPoint.Z = 0;
+	return FirstRadius;
 }
 
-const Point& Point::operator=(const Point& AnotherPoint)
+const double Ellipse::GetSecondRadius() const 
 {
-	X = AnotherPoint.X;
-	Y = AnotherPoint.Y;
-	Z = AnotherPoint.Z;
+	return SecondRadius;
 }
 
-const Point& Point::operator=(Point&& AnotherPoint)
+const Point& Ellipse::GetCenter() const
 {
-	X = AnotherPoint.X;
-	Y = AnotherPoint.Y;
-	Z = AnotherPoint.Z;
-	AnotherPoint.X = 0;
-	AnotherPoint.Y = 0;
-	AnotherPoint.Z = 0;
+	Point* P = new Point(this->GetX(), this->GetY(), 0);
+	return *P;
 }
 
-const Point operator+(Point Left, const Point& Right)
+const vector<Point*> Ellipse::GetVertices() const
 {
-	return Left += Right;
-}
-
-const Point operator-(Point Left, const Point& Right)
-{
-	return Left -= Right;
-}
-
-const Point& Point::operator+=(const Point& AnotherPoint)
-{
-	X += AnotherPoint.X;
-	Y += AnotherPoint.Y;
-	Z += AnotherPoint.Z;
-	return *this;
-}
-
-const Point& Point::operator-=(const Point& AnotherPoint)
-{
-	X -= AnotherPoint.X;
-	Y -= AnotherPoint.Y;
-	Z -= AnotherPoint.Z;
-	return *this;
-}
-
-const Point operator+(Point Left, const Point& Right)
-{
-	return Left += Right;
-}
-
-const Point operator-(Point Left, const Point& Right)
-{
-	return Left -= Right;
-}
-
-double Point::GetPointCoordinateX() const
-{
-	return X;
-}
-
-void Point::SetPointCoordinateX(const double NewX)
-{
-	X = NewX;
-}
-
-double Point::GetPointCoordinateY() const
-{
-	return Y;
-}
-
-void Point::SetPointCoordinateY(const double NewY)
-{
-	Y = NewY;
-}
-
-double Point::GetPointCoordinateZ() const
-{
-	return Z;
-}
-
-void Point::SetPointCoordinateZ(const double NewZ)
-{
-	Z = NewZ;
-}
-
-void Point::SetAllCoordinates(const double NewX, const double NewY, const double NewZ)
-{
-	X = NewX;
-	Y = NewY;
-	Z = NewZ;
+	cout << "Cannot get vertices for ellipse" << endl; 
+	vector<Point*> vec;
+	Point* a = new Point();
+	vec.push_back(a);
+	return vec;
 }
 
 Box::Box() 
@@ -320,22 +186,54 @@ Box::Box(Box&& AnotherBox)
 Box::~Box() 
 {}
 
-const double Box::CalculateVolume()
+const double Box::CalculateVolume() const
 {
 	return (Max.GetPointCoordinateX() - Min.GetPointCoordinateX()) *
 		(Max.GetPointCoordinateY() - Min.GetPointCoordinateY()) *
 		(Max.GetPointCoordinateZ() - Min.GetPointCoordinateZ());
 }
 
-const double Box::CalculateSurfaceArea()
+const double Box::CalculateSurfaceArea() const
 {
 	Point Size = Max - Min;
 	return 0.5 * (Size.GetPointCoordinateX() * Size.GetPointCoordinateY() + Size.GetPointCoordinateX() * Size.GetPointCoordinateZ() + 
 		Size.GetPointCoordinateY() * Size.GetPointCoordinateZ());
 }
 
-Ball::Ball() : Radius(0)
-{}
+const Point& Box::GetCenter() const
+{
+	Point* P = new Point(this->GetX(), this->GetY(), this->GetZ());
+	return *P;
+}
+
+const vector<Point*> Box::GetVertices() const
+{
+	vector<Point*> vec;
+	Point* P1 = new Point(Min.GetPointCoordinateX(), Min.GetPointCoordinateY(), Min.GetPointCoordinateZ());
+	vec.push_back(P1);
+	Point* P2 = new Point(Min.GetPointCoordinateX(), Max.GetPointCoordinateY(), Min.GetPointCoordinateZ());
+	vec.push_back(P2);
+	Point* P3 = new Point(Max.GetPointCoordinateX(), Max.GetPointCoordinateY(), Min.GetPointCoordinateZ());
+	vec.push_back(P3);
+	Point* P4 = new Point(Max.GetPointCoordinateX(), Min.GetPointCoordinateY(), Min.GetPointCoordinateZ());
+	vec.push_back(P4);
+	Point* P5 = new Point(Max.GetPointCoordinateX(), Min.GetPointCoordinateY(), Max.GetPointCoordinateZ());
+	vec.push_back(P5);
+	Point* P6 = new Point(Min.GetPointCoordinateX(), Min.GetPointCoordinateY(), Max.GetPointCoordinateZ());
+	vec.push_back(P6);
+	Point* P7 = new Point(Min.GetPointCoordinateX(), Max.GetPointCoordinateY(), Max.GetPointCoordinateZ());
+	vec.push_back(P7);
+	Point* P8 = new Point(Max.GetPointCoordinateX(), Max.GetPointCoordinateY(), Max.GetPointCoordinateZ());
+	vec.push_back(P8);
+	return vec;
+}
+
+Ball::Ball() : Radius(1)
+{
+	SetX(0);
+	SetY(0);
+	SetZ(0);
+}
 
 Ball::Ball(const double NewRadius, const double NewX, const double NewY, const double NewZ) : Radius(NewRadius)
 {
@@ -365,12 +263,27 @@ Ball::Ball(Ball&& AnotherBall) : Radius(AnotherBall.Radius)
 Ball::~Ball() 
 {}
 
-const double Ball::CalculateVolume()
+const double Ball::CalculateVolume() const
 {
 	return (4 * 3.14 * pow(Radius, 3)) / 3;
 }
 
-const double Ball::CalculateSurfaceArea() 
+const double Ball::CalculateSurfaceArea() const
 {
 	return 4 * 3.14 * pow(Radius, 2);
+}
+
+const Point& Ball::GetCenter() const
+{
+	Point* P = new Point(this->GetX(), this->GetY(), this->GetZ());
+	return *P;
+}
+
+const vector<Point*> Ball::GetVertices() const
+{
+	cout << "Cannot get vertices for ball" << endl;
+	vector<Point*> vec;
+	Point* a = new Point();
+	vec.push_back(a);
+	return vec;
 }
